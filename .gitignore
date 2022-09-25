@@ -1,0 +1,4 @@
+.vscode/
+cs396env/
+**/.ipynb_checkpoints/
+**/__pycache__/
