@@ -2,3 +2,7 @@
 cs396env/
 **/.ipynb_checkpoints/
 **/__pycache__/
+db.sqlite3
+Pipfile
+Pipfile.lock
+media
