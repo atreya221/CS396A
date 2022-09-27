@@ -61,7 +61,7 @@
 							<p class="text-warning">
 								<em>Login to use the Portal</em>
 							</p>
-                            <form action="/user/loginUser" method="post">
+                            <form action="/loginUser/" method="post">
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <input type="text" name="username" id="username" placeholder="username" class="form-control" required="True" autofocus="True">
@@ -76,7 +76,7 @@
 
 						</div>
 						<div class="panel-footer panel-footer-style">
-							Don't have an account? <a href="/user/signup" class="text-info"><strong>Sign up</strong></a>
+							Don't have an account? <a href="/signup" class="text-info"><strong>Sign up</strong></a>
 						</div>
 					</div>
 				</div>
