@@ -10,3 +10,12 @@ def upload(request):
 
 def stats(request):
     return render(request, "stats.html")
+
+def login(request):
+    return render(request, "login.html")
+
+def signup(request):
+    return render(request, "signup.html")
+
+def dashboard(request):
+    return render(request, "dashboard.html")
