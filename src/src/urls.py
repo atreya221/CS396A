@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from user import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,5 +29,8 @@ urlpatterns = [
     path("logout/", views.logout, name="logout"),
     path("dashboard/", views.dashboard, name="dashboard"),
     path("upload/", views.upload, name="upload"),
-    path("stats/", views.stats, name="upload")
-]
+    path("formsubmit/", views.submitForm, name="submitForm"),
+    path("deleteFile/", views.deleteFile, name="submitForm"),
+    path("stats/", views.stats, name="upload"),
+    path('', views.UploadView.as_view(), name='fileupload'),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

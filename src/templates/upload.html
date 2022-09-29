@@ -28,6 +28,7 @@
                     <ul class="nav navbar-nav navbar-right"> 
                             <li><a href="/upload"><span class="glyphicon glyphicon-upload"></span> Upload</a></li> 
                             <li><a href="/stats"><span class="glyphicon glyphicon-stats"></span> Stats</a></li> 
+                            <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                     </ul> 
                 </div> 
             </div> 
@@ -87,10 +88,10 @@
         <div class="container-fluid">
             <div class="row">
                 <main class="col-md-9 ml-sm-auto col-lg-12 px-md-4 py-4">
-                    <h1 style="margin-top:80px;">Upload Documents</h1>
                     <section>
                         <div class="container">
-                            <form style="margin-top: 20px;" id="reimbursement-form" method="post" action="/formsubmit"
+                            <h1 style="margin-top:100px;">Upload Documents</h1>
+                            <form style="margin-top: 20px;" id="reimbursement-form" method="post" action="/formsubmit/"
                                 enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="form-row">
@@ -100,7 +101,7 @@
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="formFileLg" class="form-label">Upload file</label>
-                                        <input style="font-size:large; height: 100%;padding: 2px;" class="form-control form-control-lg" id="formFileLg" type="file">
+                                        <input style="font-size:large; height: 100%;padding: 2px;" class="form-control form-control-lg" id="file" name = "file" type="file">
                                     </div>
                                 </div>
     

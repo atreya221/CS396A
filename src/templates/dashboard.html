@@ -28,61 +28,11 @@
                     <ul class="nav navbar-nav navbar-right"> 
                             <li><a href="/upload"><span class="glyphicon glyphicon-upload"></span> Upload</a></li> 
                             <li><a href="/stats"><span class="glyphicon glyphicon-stats"></span> Stats</a></li> 
+                            <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                     </ul> 
                 </div> 
             </div> 
         </div>
-
-		<!--<div class="container container-modi">
-			<div class="row row-style">
-				<div class="col-xs-offset-2 col-xs-8 col-md-offset-3 col-md-6">
-                    {% if messages %}
-                    {% for message in messages %}
-                    {% if message.tags %}
-                    {% if message.tags == "error" %}
-                    <div class="panel panel-danger">
-                    {% endif %} 
-                    {% if message.tags == "success" %}
-                    <div class="panel panel-success">
-                    {% endif %} 
-						<div class="panel-heading">
-							<strong><h5 class="{{ message.tags }}">{{ message }}</h5></strong>
-						</div>   
-                    {% endif %} 
-                    {% endfor %}
-                    {% else %}
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h4><strong>LOGIN</strong></h4>
-                        </div>
-                    {% endif %}
-                                            
-						<div class="panel-body panel-body-style">
-							<p class="text-warning">
-								<em>Login to use the Portal</em>
-							</p>
-                            <form action="/user/loginUser" method="post">
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    <input type="text" name="username" id="username" placeholder="username" class="form-control" required="True" autofocus="True">
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" name="password" id = "password" placeholder="Password" class="form-control" required="True" pattern=".{6,}" autofocus>
-                                </div>
-                                <div class="form-group">
-                                    <input type="submit" class="btn btn-primary" value="Login">
-                                </div>
-							</form>
-
-						</div>
-						<div class="panel-footer panel-footer-style">
-							Don't have an account? <a href="/user/signup" class="text-info"><strong>Sign up</strong></a>
-						</div>
-					</div>
-				</div>
-			</div>
-            <div class="push"></div>
-		</div>-->
 		
         <div class="container container-fluid">
             <div class="row">
@@ -93,25 +43,42 @@
                             <li class="breadcrumb-item active" aria-current="page">Overview</li>
                         </ol>
                     </nav> -->
-                    <h1 class="h1" style="margin-top: 100px;">Dashboard</h1>
                     <div class="row">
                         <div class="col-12 col-xl-8 mb-4 mb-lg-0">
                             <div class="card">
-                                <h5 class="card-header">Latest Submitted Forms</h5>
+                                <h1 class="h1" style="margin-top: 100px; margin-bottom: 20px;">Dashboard</h1>
+                                <h4 class="card-header">Latest Uploaded Files</h4>
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table table-hover table-bordered">
+                                        <table style="vertical-align: middle;" class="table table-hover table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th class = "active" scope="col">Sl. no.</th>
-                                                    <th class = "active" scope="col">Organization Name</th>
-                                                    <th class = "active" scope="col"></th>
+                                                    <th class = "active col-md-1" scope="col" style="max-width: 20px;"><center>Sl. no.</center></th>
+                                                    <th class = "active col-md-6" scope="col"><center>File</center></th>
+                                                    <th class = "active col-md-3" scope="col"><center>Organization</center></th>
+                                                    <th class = "active col-md-2" scope="col" style="max-width: 32px;"><center>Actions</center></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                {% for file in files %}
                                                 <tr>
-                                                    
+                                                    <td style="vertical-align: middle;">{{ forloop.counter }}</td>
+                                                    <td style="vertical-align: middle;"><a href="{{file.file.url}}" target="_blank">{{ file.file.name }}</a></td>
+                                                    <td style="vertical-align: middle;">{{ file.organization }}</td>
+                                                    <td style="vertical-align: middle;">
+                                                        <div style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px; margin-bottom: 0px;" class="form-group col-md-6">
+                                                            <center>
+                                                                <a href="/stats/?file_id={{file.file_id}}" target="_blank"><button type="button" class="btn btn-primary">View</button></a>
+                                                            </center>
+                                                        </div>
+                                                        <div style="padding-left: 0px; padding-right: 0px; padding-bottom: 0px; margin-bottom: 0px;" class="form-group col-md-6">
+                                                            <center>
+                                                                <a href="/deleteFile/?file_id={{file.file_id}}"><button type="button" class="btn btn-danger">Delete</button></a>
+                                                            </center>
+                                                        </div>
+                                                    </td>
                                                 </tr>
+                                                {% endfor %}
                                             </tbody>
                                         </table>
                                     </div>

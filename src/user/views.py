@@ -1,21 +1,50 @@
+from http.client import HTTPResponse
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import messages
 from .models import (
     User,
+    FileForm,
 )
 from .utils import (
     MAKE_PASSWORD,
     CHECK_PASSWORD,
     IsLoggedIn,
 )
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
 
 # Create your views here.
 
 def index(request):
-    return render(request, "index.html")
+    user = IsLoggedIn(request)
+    if user is not None:
+        return HttpResponseRedirect("/dashboard")
+    else:
+        return render(request, "index.html")
 
 def upload(request):
-    return render(request, "upload.html")
+    user = IsLoggedIn(request)
+    if user is None:
+        messages.error(request, "Please login first to upload files!")
+        return HttpResponseRedirect("/login")
+    else:
+        return render(request, "upload.html")
+
+def submitForm(request):
+        user = IsLoggedIn(request)
+        if user is None: 
+            messages.error(request, "Please login first to upload files!")
+            return HttpResponseRedirect("/login")
+        else: 
+            if request.method == "POST":
+                form = FileForm()
+                form.user = User.objects.get(username=IsLoggedIn(request).username)
+                form.organization = request.POST.get("name")
+                form.file = request.FILES["file"]
+                form.save()
+                return HttpResponseRedirect("/dashboard")
+            else:
+                return HttpResponseRedirect("/login")
 
 def stats(request):
     return render(request, "stats.html")
@@ -106,4 +135,36 @@ def register(request):
         return HttpResponseRedirect(url)
 
 def dashboard(request):
-    return render(request, "dashboard.html")
+    user = IsLoggedIn(request)
+    if user is None:
+        messages.error(request, "Please login first to view dashboard!")
+        return HttpResponseRedirect("/login")
+    else:
+        return render(
+            request,
+            "dashboard.html",
+            {
+                "user": IsLoggedIn(request),
+                "files": FileForm.objects.filter(user=IsLoggedIn(request)).order_by('-file_id'),
+            },
+        )
+
+class UploadView(CreateView):
+    model = FileForm
+    fields = ['file', ]
+    success_url = reverse_lazy('fileupload')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['documents'] = FileForm.objects.all()
+        return context
+
+def deleteFile(request):
+    user = IsLoggedIn(request)
+    if user is None:
+        messages.error(request, "Please login first to delete file!")
+        return HttpResponseRedirect("/login")
+    else:
+        file_id = request.GET.get("file_id")
+        # print(file_id)
+        FileForm.objects.filter(file_id=file_id).delete()
+        return HttpResponseRedirect("/dashboard")
