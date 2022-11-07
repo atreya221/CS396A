@@ -6,3 +6,4 @@ db.sqlite3
 Pipfile
 Pipfile.lock
 media
+**/nohup.out
