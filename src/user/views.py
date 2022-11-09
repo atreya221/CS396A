@@ -1,4 +1,6 @@
 from http.client import HTTPResponse
+import os
+from src import settings
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import messages
 from .models import (
@@ -9,6 +11,10 @@ from .utils import (
     MAKE_PASSWORD,
     CHECK_PASSWORD,
     IsLoggedIn,
+    view_public_subnets,
+    remove_public_subnets,
+    view_self_conflicts,
+    remove_self_conflicts,
 )
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
@@ -47,7 +53,68 @@ def submitForm(request):
                 return HttpResponseRedirect("/login")
 
 def stats(request):
-    return render(request, "stats.html")
+    user = IsLoggedIn(request)
+    if user is None:
+        messages.error(request, "Please login first to view stats!")
+        return HttpResponseRedirect("/login")
+    elif request.GET.get("file_id") == None:
+        return HttpResponseRedirect("/dashboard")
+    elif request.method == "GET":
+        total_cnt, location_cnt, public_subnets = view_public_subnets(FileForm.objects.get(file_id=request.GET.get("file_id")))
+        return render(
+            request,
+            "stats.html",
+            {
+                "user": IsLoggedIn(request),
+                "file": FileForm.objects.get(file_id=request.GET.get("file_id")),
+                "public_subnets": public_subnets,
+                "totalcnt": total_cnt,
+                "publiccnt": str(len(public_subnets)),
+                "locationcnt": location_cnt,
+            },
+        )
+    elif request.method == "POST":
+        total_cnt, location_cnt, public_subnets = view_public_subnets(FileForm.objects.get(file_id=request.GET.get("file_id")))
+        overlappings, overlapped_subnets = view_self_conflicts(FileForm.objects.get(file_id=request.GET.get("file_id")))
+        return render(
+            request,
+            "stats.html",
+            {
+                "user": IsLoggedIn(request),
+                "file": FileForm.objects.get(file_id=request.GET.get("file_id")),
+                "public_subnets": public_subnets,
+                "totalcnt": total_cnt,
+                "publiccnt": str(len(public_subnets)),
+                "locationcnt": location_cnt,
+                "overlapcnt": len(overlapped_subnets),
+                "overlappings": overlappings,
+            },
+        )
+
+def removePublicSubnets(request):
+    user = IsLoggedIn(request)
+    if user is None:
+        return HttpResponseRedirect("/login")
+    else:
+        if request.method == "POST":
+            file_id = request.GET.get("file_id")
+            remove_public_subnets(FileForm.objects.get(file_id=request.GET.get("file_id")))
+            return HttpResponseRedirect(f"/stats/?file_id={file_id}")
+        else:
+            return HttpResponseRedirect("/dashboard")
+
+def resolveSelfConflicts(request):
+    user = IsLoggedIn(request)
+    if user is None:
+        return HttpResponseRedirect("/login")
+    else:
+        if request.method == "POST":
+            file_id = request.GET.get("file_id")
+            remove_self_conflicts(FileForm.objects.get(file_id=request.GET.get("file_id")))
+            return HttpResponseRedirect(f"/stats/?file_id={file_id}")
+        else:
+            return HttpResponseRedirect("/dashboard")
+
 
 def login(request): 
     user = IsLoggedIn(request)
@@ -166,5 +233,7 @@ def deleteFile(request):
     else:
         file_id = request.GET.get("file_id")
         # print(file_id)
+        os.remove(os.path.join(settings.MEDIA_ROOT, FileForm.objects.get(file_id=file_id).file.name))
         FileForm.objects.filter(file_id=file_id).delete()
         return HttpResponseRedirect("/dashboard")
+

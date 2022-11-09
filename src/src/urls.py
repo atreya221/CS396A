@@ -32,5 +32,7 @@ urlpatterns = [
     path("formsubmit/", views.submitForm, name="submitForm"),
     path("deleteFile/", views.deleteFile, name="submitForm"),
     path("stats/", views.stats, name="upload"),
+    path("removePublic/", views.removePublicSubnets, name="removePublicSubnets"),
+    path("resolveSelfConflicts/", views.resolveSelfConflicts, name="resolveSelfConflicts"),
     path('', views.UploadView.as_view(), name='fileupload'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
