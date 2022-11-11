@@ -48,33 +48,62 @@
                                     <h4 class="card-header">Distinct Locations : {{locationcnt}}</h4>
                                     <h4 class="card-header">Public Subnets : {{publiccnt}}</h4>
                                     <center>
+                                        <form method="post" action="/removePublic/?file_id={{file.file_id}}">
+                                        {% csrf_token %}
                                         {% if public_subnets %}
-                                        <div class="form-group col-lg-4">
-                                            <input style="margin-top: 50px; margin-bottom: 50px;" type="submit" value="Remove Public Subnets" class="btn btn-danger">
-                                        </div>
-                                        {% endif %}
-                                        <form method="post" action="/stats/?file_id={{file.file_id}}">
-                                            {% csrf_token %}
                                             <div class="form-group col-lg-4">
-                                                <input style="margin-top: 50px; min-width: 170px; margin-bottom: 50px;" type="submit" value="View Self Conflicts" class="btn btn-primary">
+                                                <input style="margin-top: 50px; margin-bottom: 50px;" type="submit" value="Remove Public Subnets" class="btn btn-danger">
                                             </div>
+                                        {% else %}
+                                            <div class="form-group col-lg-4">
+                                                <input style="margin-top: 50px; margin-bottom: 50px;" type="submit" value="Remove Public Subnets" class="btn btn-danger" disabled>
+                                            </div>
+                                        {% endif %}
                                         </form>
+                                        <div class="form-group col-lg-4">
+                                            <button onclick="'/stats/viewSelfConflicts/?file_id={{file.file_id}}'" style="margin-top: 50px; min-width: 170px; margin-bottom: 50px;" type="submit" value="View Self Conflicts" class="btn btn-primary"><a style="color: white;" href="/stats/viewSelfConflicts/?file_id={{file.file_id}}">View Self Conflicts</a></button>
+                                        </div>
                                         <form method="post" action="/resolveSelfConflicts/?file_id={{file.file_id}}">
-                                            {% csrf_token %}
+                                        {% csrf_token %}
+                                        {% if overlappings %}
                                             <div class="form-group col-lg-4">
                                                 <input style="margin-top: 50px; margin-bottom: 50px;" type="submit" value="Remove Self Conflicts" class="btn btn-danger">
                                             </div>
+                                        {% else %}
+                                            <div class="form-group col-lg-4">
+                                                <input style="margin-top: 50px; margin-bottom: 50px;" type="submit" value="Remove Self Conflicts" class="btn btn-danger" disabled>
+                                            </div>
+                                        {% endif %}
                                         </form>
                                     </center>
                                     <br><br>
-                                    {% if overlappings %}
+                                    {% if overlapcnt >= 0 %}
                                     <h4 class="card-header" style="margin-top: 50px;">Overlapping Subnets : {{overlapcnt}}</h4>
-                                    <ul class="list-group col-lg-12" style="margin-bottom: 100px;">
-                                        <h4 class="card-header">List of Overlapping Subnets</h4>
+                                    <h4 class="card-header">Number of overlaps : {{overlappaircnt}}</h4>
+                                    {% endif %}
+                                    {% if overlappings %}
+                                    <br>
+                                    <h4 class="card-header">List of Overlapping Subnets</h4>
+                                    <br>
+                                        <table class="col-lg-12 table table-hover table-bordered table-responsive text-center" style="margin-bottom: 100px;">
+                                            <tbody>
+                                                <tr>
+                                                    <th><center>Location 1</center></th>
+                                                    <th><center>Subnet 1</center></th>
+                                                    <th><center>Location 2</center></th>
+                                                    <th><center>Subnet 2</center></th>
+                                                </tr>
+                                                {% for pair in overlappings %}
+                                                <tr class="table-warning">
+                                                    <td>{{ pair.0.0 }}</td>
+                                                    <td>{{ pair.0.1 }}</td>
+                                                    <td>{{ pair.1.0 }}</td>
+                                                    <td>{{ pair.1.1 }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
                                         <br>
-                                        {% for pair in overlappings %}
-                                        <li class="list-group-item list-group-item-warning">{{ pair }}</li>
-                                        {% endfor %}
                                     </ul>
                                     {% endif %}
                                 </div>

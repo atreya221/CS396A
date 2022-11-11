@@ -11,6 +11,8 @@ from .utils import (
     MAKE_PASSWORD,
     CHECK_PASSWORD,
     IsLoggedIn,
+    remove_merge_conflicts,
+    view_merge_conflicts,
     view_public_subnets,
     remove_public_subnets,
     view_self_conflicts,
@@ -59,7 +61,7 @@ def stats(request):
         return HttpResponseRedirect("/login")
     elif request.GET.get("file_id") == None:
         return HttpResponseRedirect("/dashboard")
-    elif request.method == "GET":
+    else:
         total_cnt, location_cnt, public_subnets = view_public_subnets(FileForm.objects.get(file_id=request.GET.get("file_id")))
         return render(
             request,
@@ -73,9 +75,18 @@ def stats(request):
                 "locationcnt": location_cnt,
             },
         )
-    elif request.method == "POST":
+
+
+def viewSelfConflicts(request):
+    user = IsLoggedIn(request)
+    if user is None:
+        messages.error(request, "Please login first to view stats!")
+        return HttpResponseRedirect("/login")
+    elif request.GET.get("file_id") == None:
+        return HttpResponseRedirect("/dashboard")
+    else:
         total_cnt, location_cnt, public_subnets = view_public_subnets(FileForm.objects.get(file_id=request.GET.get("file_id")))
-        overlappings, overlapped_subnets = view_self_conflicts(FileForm.objects.get(file_id=request.GET.get("file_id")))
+        overlappings, overlapped_subnets, overlapped_subnets_id, overlapping_id = view_self_conflicts(FileForm.objects.get(file_id=request.GET.get("file_id")))
         return render(
             request,
             "stats.html",
@@ -87,7 +98,8 @@ def stats(request):
                 "publiccnt": str(len(public_subnets)),
                 "locationcnt": location_cnt,
                 "overlapcnt": len(overlapped_subnets),
-                "overlappings": overlappings,
+                "overlappaircnt": len(overlapping_id),
+                "overlappings": overlapping_id,
             },
         )
 
@@ -115,6 +127,39 @@ def resolveSelfConflicts(request):
         else:
             return HttpResponseRedirect("/dashboard")
 
+def viewMergeConflicts(request):
+    user = IsLoggedIn(request)
+    if user is None:
+        return HttpResponseRedirect("/login")
+    elif request.GET.get("file1") == None or request.GET.get("file2") == None:
+        return HttpResponseRedirect("/dashboard")
+    else:
+        file_id1 = request.GET.get("file1")
+        file_id2 = request.GET.get("file2")
+        overlapping = view_merge_conflicts(
+            FileForm.objects.get(file_id=file_id1),
+            FileForm.objects.get(file_id=file_id2),
+        )
+        
+
+def resolveMergeConflicts(request):
+    user = IsLoggedIn(request)
+    if user is None:
+        return HttpResponseRedirect("/login")
+    elif request.GET.get("file1") == None or request.GET.get("file2") == None:
+        return HttpResponseRedirect("/dashboard")
+    else:
+        if request.method == "POST":
+            file_id1 = request.POST.get("file1")
+            file_id2 = request.POST.get("file2")
+            merging_fraction = request.POST.get("merging_fraction")
+            remove_merge_conflicts(
+                FileForm.objects.get(file_id=file_id1),
+                FileForm.objects.get(file_id=file_id2),
+                merging_fraction,
+            )
+        else:
+            return HttpResponseRedirect("/dashboard")
 
 def login(request): 
     user = IsLoggedIn(request)
