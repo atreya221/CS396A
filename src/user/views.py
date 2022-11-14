@@ -103,6 +103,20 @@ def viewSelfConflicts(request):
             },
         )
 
+def merge(request):
+    user = IsLoggedIn(request)
+    if user is None:
+        messages.error(request, "Please login first to view stats!")
+        return HttpResponseRedirect("/login")
+    else:
+        return render(
+            request, 
+            "form.html",
+            {
+                "files": FileForm.objects.filter(user=IsLoggedIn(request)).order_by('-file_id')
+            }
+        )    
+
 def removePublicSubnets(request):
     user = IsLoggedIn(request)
     if user is None:
@@ -146,17 +160,29 @@ def resolveMergeConflicts(request):
     user = IsLoggedIn(request)
     if user is None:
         return HttpResponseRedirect("/login")
-    elif request.GET.get("file1") == None or request.GET.get("file2") == None:
+    elif request.POST.get("file-1") == None or request.POST.get("file-2") == None:
         return HttpResponseRedirect("/dashboard")
     else:
         if request.method == "POST":
-            file_id1 = request.POST.get("file1")
-            file_id2 = request.POST.get("file2")
-            merging_fraction = request.POST.get("merging_fraction")
-            remove_merge_conflicts(
+            file_id1 = request.POST.get("file-1")
+            file_id2 = request.POST.get("file-2")
+            merging_fraction = 1
+            to_keep, to_change = remove_merge_conflicts(
                 FileForm.objects.get(file_id=file_id1),
                 FileForm.objects.get(file_id=file_id2),
                 merging_fraction,
+            )
+            return render(
+                request,
+                "merge.html",
+                {
+                    "totalcnt": len(to_change) + len(to_keep),
+                    "changecnt": len(to_change),
+                    "mergedcnt": len(to_keep),
+                    "subnetstochange": to_change,
+                    "file1": FileForm.objects.get(file_id=file_id1),
+                    "file2": FileForm.objects.get(file_id=file_id2),
+                }
             )
         else:
             return HttpResponseRedirect("/dashboard")

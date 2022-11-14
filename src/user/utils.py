@@ -1,5 +1,6 @@
 from .models import User
 from .wis import wis_lp
+import csv
 from pandas import read_csv
 import os
 import math
@@ -42,6 +43,11 @@ def IsLoggedIn(request):
             return None
     else:
         return None
+
+def write_to_csv(fname, mydict):
+    writer = csv.writer(open(fname, 'w'))
+    for key, value in mydict.items():
+        writer.writerow([key, value])
 
 def view_public_subnets(file):
     file_path = os.path.join(settings.MEDIA_ROOT, file.file.name)
@@ -239,6 +245,8 @@ def remove_merge_conflicts(file1, file2, MERGING_FRACTION):
     new_conflict_edges = find_coalition_overlaps(new_coalition)
     G_ = create_conflict_graph(new_conflict_edges)
     to_keep, to_change = wis_lp(G_)
+    print (len(to_change))
+    print (to_change)
     return [to_keep, to_change]
 
 def find_coalition_overlaps(routes):
@@ -247,7 +255,7 @@ def find_coalition_overlaps(routes):
         for value in values:
             locsub.append(
                 str(key.replace("'", "").strip()) + "_" + 
-                str(value.replace("'", "").strip())
+                str(value).replace("'", "").strip()
             )
     overlapping = set()
 
@@ -341,6 +349,7 @@ def gen_random_values_for_addr_types(d):
             # print temp
             if not util_key in all_routes_util:
                 all_routes_util[util_key] = temp
+    write_to_csv('/data/atreya/CS396A/src/media/all_routes_util.txt', all_routes_util)
 
 
 def cost(s):
@@ -639,6 +648,7 @@ def create_conflict_graph(conflict_edges):
     G.add_edges_from(conflict_edges)
     # update the nodes costs
     for v in G.nodes():
+        print(v)
         cost = cost_fuction(v)
         G.nodes[v]['cost'] = cost
     return G
