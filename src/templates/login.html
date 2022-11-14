@@ -21,21 +21,19 @@
                 <div class="navbar-header"> 
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar"> 
                         <span class="icon-bar"></span> 
-                        <span class="icon-bar"></span>
                         <span class="icon-bar"></span> 
                     </button> <a class="navbar-brand" href="/">IP Address Consolidation</a> 
                 </div> 
                 <div class="collapse navbar-collapse" id="myNavbar"> 
                     <ul class="nav navbar-nav navbar-right"> 
-                            <li><a href="/upload"><span class="glyphicon glyphicon-upload"></span> Upload</a></li> 
-                            <li><a href="/merge"><span class="glyphicon glyphicon-random"></span> Merge</a></li>
-                            <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                        <li><a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign up</a></li> 
+                        <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li> 
                     </ul> 
                 </div> 
             </div> 
         </div>
 
-		<!--<div class="container container-modi">
+		<div class="container container-modi">
 			<div class="row row-style">
 				<div class="col-xs-offset-2 col-xs-8 col-md-offset-3 col-md-6">
                     {% if messages %}
@@ -63,7 +61,7 @@
 							<p class="text-warning">
 								<em>Login to use the Portal</em>
 							</p>
-                            <form action="/user/loginUser" method="post">
+                            <form action="/loginUser/" method="post">
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <input type="text" name="username" id="username" placeholder="username" class="form-control" required="True" autofocus="True">
@@ -78,44 +76,15 @@
 
 						</div>
 						<div class="panel-footer panel-footer-style">
-							Don't have an account? <a href="/user/signup" class="text-info"><strong>Sign up</strong></a>
+							Don't have an account? <a href="/signup" class="text-info"><strong>Sign up</strong></a>
 						</div>
 					</div>
 				</div>
 			</div>
             <div class="push"></div>
-		</div>-->
+		</div>
 		
-        <div class="container-fluid">
-            <div class="row">
-                <main class="col-md-9 ml-sm-auto col-lg-12 px-md-4 py-4">
-                    <section>
-                        <div class="container">
-                            <h1 style="margin-top:100px;">Upload Documents</h1>
-                            <form style="margin-top: 20px;" id="reimbursement-form" method="post" action="/formsubmit/"
-                                enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <div class="form-row">
-                                    <div class="form-group col-md-8">
-                                        <label for="name">Name of Organization</label>
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Organization Name">
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="formFileLg" class="form-label">Upload file</label>
-                                        <input style="font-size:large; height: 100%;padding: 2px;" class="form-control form-control-lg" id="file" name = "file" type="file">
-                                    </div>
-                                </div>
-    
-                                <div class="mb-3" style="margin-top:100px;">
-                                    <div class="form-row">
-                                        <div class="col-md-offset-4 col-md-4 form-group" align="center" style="margin-top:50px;">
-                                            <button type="submit" class="btn btn-primary">Upload</button>
-                                        </div>
-                    </section>
-                </main>
-            </div>
-        </div>
-        <div class="push"></div>
+
 		<footer class = "navbar navbar-fixed-bottom">
             <div class="container"> 
                 <center> 

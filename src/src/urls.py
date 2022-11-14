@@ -16,10 +16,28 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from user import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.index, name="index"),
+    path("signup/", views.signup, name="signup"),
+    path("register/", views.register, name="register"),
+    path("login/", views.login, name="login"),
+    path("loginUser/", views.loginUser, name="loginUser"),
+    path("logout/", views.logout, name="logout"),
+    path("dashboard/", views.dashboard, name="dashboard"),
     path("upload/", views.upload, name="upload"),
-    path("stats/", views.upload, name="upload")
-]
+    path("merge/", views.merge, name="merge"),
+    path("mergeFiles/", views.resolveMergeConflicts, name="mergeFiles"),
+    path("formsubmit/", views.submitForm, name="submitForm"),
+    path("deleteFile/", views.deleteFile, name="submitForm"),
+    path("stats/viewSelfConflicts/", views.viewSelfConflicts, name="viewSelfConflicts"),
+    path("stats/", views.stats, name="stats"),
+    path("removePublic/", views.removePublicSubnets, name="removePublicSubnets"),
+    path("resolveSelfConflicts/", views.resolveSelfConflicts, name="resolveSelfConflicts"),
+    path("viewMergeConflicts/", views.viewMergeConflicts, name="viewMergeConflicts"),
+    path("resolveMergeConflicts/", views.resolveMergeConflicts, name="resolveMergeConflicts"),
+    path('', views.UploadView.as_view(), name='fileupload'),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

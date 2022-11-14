@@ -26,64 +26,12 @@
                 </div> 
                 <div class="collapse navbar-collapse" id="myNavbar"> 
                     <ul class="nav navbar-nav navbar-right"> 
-                            <li><a href="/upload"><span class="glyphicon glyphicon-upload"></span> Upload</a></li> 
-                            <li><a href="/stats"><span class="glyphicon glyphicon-stats"></span> Stats</a></li> 
+                            <li><a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign up</a></li> 
+                            <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li> 
                     </ul> 
                 </div> 
             </div> 
         </div>
-
-		<!--<div class="container container-modi">
-			<div class="row row-style">
-				<div class="col-xs-offset-2 col-xs-8 col-md-offset-3 col-md-6">
-                    {% if messages %}
-                    {% for message in messages %}
-                    {% if message.tags %}
-                    {% if message.tags == "error" %}
-                    <div class="panel panel-danger">
-                    {% endif %} 
-                    {% if message.tags == "success" %}
-                    <div class="panel panel-success">
-                    {% endif %} 
-						<div class="panel-heading">
-							<strong><h5 class="{{ message.tags }}">{{ message }}</h5></strong>
-						</div>   
-                    {% endif %} 
-                    {% endfor %}
-                    {% else %}
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h4><strong>LOGIN</strong></h4>
-                        </div>
-                    {% endif %}
-                                            
-						<div class="panel-body panel-body-style">
-							<p class="text-warning">
-								<em>Login to use the Portal</em>
-							</p>
-                            <form action="/user/loginUser" method="post">
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    <input type="text" name="username" id="username" placeholder="username" class="form-control" required="True" autofocus="True">
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" name="password" id = "password" placeholder="Password" class="form-control" required="True" pattern=".{6,}" autofocus>
-                                </div>
-                                <div class="form-group">
-                                    <input type="submit" class="btn btn-primary" value="Login">
-                                </div>
-							</form>
-
-						</div>
-						<div class="panel-footer panel-footer-style">
-							Don't have an account? <a href="/user/signup" class="text-info"><strong>Sign up</strong></a>
-						</div>
-					</div>
-				</div>
-			</div>
-            <div class="push"></div>
-		</div>-->
-		
 
 		<footer class = "navbar navbar-fixed-bottom">
             <div class="container"> 
